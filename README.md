@@ -4,9 +4,13 @@ This project presents you a Windows small command line tool to mimic the Persist
 
 ## Overview
 
-Mimics the #bbinclude syntax for the Persistent Includes feature of the BBEdit editor tool to inline-include files into other files while preserving the include directive itself after the include.
+The tool mimics the `#bbinclude` syntax for the Persistent Includes feature of the BBEdit editor tool to inline-include files into other files while preserving the include directive itself after the include.
 
-Supports any file that is acceptable to contain include directives,  usually inside comments in the language of the document type.
+It supports any file that is acceptable to contain include directives, usually inside comments in the language of the document type.
+
+You would use this tool usually inside a windows Command script ("Batch script") to process multiple files. The idea of keeping the include directives in-place is helpful when you want to include the external files mutliple times over and over again. You can use it to produces files that normally don't support including other files natively (e.g. include a HTML fragment inside another HTML file without having to use server-side include technologies; great for e.g. Dropbox-published files).
+
+Our web designer use this tool to manage shared code (HTML, CSS and JavaScript) when editing the templates in our [Desktop Content Management System](http://www.zeta-producer.com) Zeta Producer CMS.
 
 ## Usage
 
