@@ -21,11 +21,11 @@ Second, optional parameter to specify whether to recurse folders.
 
 ## Examples
 
-    ii \"C:\\MyFolder\\*.css\" /r
+    ii "C:\MyFolder\*.css" /r
 
-Process all CSS files in C:\\MyFolder and all subfolders.
+Process all CSS files in C:\MyFolder and all subfolders.
 
-    ii \"C:\\MyFolder\\MyFile.html\"
+    ii "C:\MyFolder\MyFile.html"
 
 Processes the single file MyFile.html.
 
@@ -38,7 +38,7 @@ is specified to be included.
 
 An include start directive has the syntax:
 
-    #zetainclude \"..\\myfolder\\filetoinclude.txt\"
+    #zetainclude "..\myfolder\filetoinclude.txt"
 
 An include end directive has the syntax:
 
@@ -57,12 +57,12 @@ that supports comments like e.g. CSS, HTML.
 
 Real-world example (inside an HTML file):
 
-    <!-- #zetainclude \"..\\myfolder\\filetoinclude.html\" -->
+    <!-- #zetainclude "..\myfolder\filetoinclude.html" -->
     <!-- #endzetainclude -->
 
 Other real-world example (inside a CSS file):
 
-    /* #zetainclude \"..\\myfolder\\filetoinclude.css\" */
+    /* #zetainclude "..\myfolder\filetoinclude.css" */
     /* #endzetainclude */
 
 ## Remarks
