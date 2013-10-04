@@ -70,7 +70,7 @@ Other real-world example (inside a CSS file):
   * Currently the program works best with input and include files both are being UTF-8 encoded.
   * Recursive includes are supported. I.e. an included file may include other files, too.
   * You may have multiple include directives inside a single file.
-  * Currently we do only support a limited subset of the syntax the the BBEdit editor supports. E.g. we do not support including files with variables. See the [BBEdit manual](pine.barebones.com/manual/BBEdit_10_User_Manual.pdf), appendix C for a full documentation of the BBEdit program.
+  * Currently we do only support a limited subset of the syntax the the BBEdit editor supports. E.g. we do not support including files with variables. See the [BBEdit manual](http://pine.barebones.com/manual/BBEdit_10_User_Manual.pdf), appendix C for a full documentation of the BBEdit program.
 
 ## History
 
