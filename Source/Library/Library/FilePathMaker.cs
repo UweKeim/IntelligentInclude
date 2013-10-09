@@ -1,8 +1,8 @@
-﻿namespace IntelligentInclude
+﻿namespace IntelligentInclude.Library
 {
-	using System.IO;
+    using System.IO;
 
-	internal sealed class FilePathMaker
+    internal sealed class FilePathMaker
 	{
 		public string Make(string filePath, string referenceFolderPath)
 		{

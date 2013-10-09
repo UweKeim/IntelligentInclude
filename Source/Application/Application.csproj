@@ -11,6 +11,7 @@
     <AssemblyName>ii</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,15 +32,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ContentProcessor.cs" />
-    <Compile Include="FilePathMaker.cs" />
-    <Compile Include="FileProcessor.cs" />
-    <Compile Include="PathInformation.cs" />
+    <Compile Include="..\Library\IntelligentInclude.cs">
+      <Link>IntelligentInclude.cs</Link>
+    </Compile>
+    <Compile Include="..\Library\IntelligentIncludeException.cs">
+      <Link>IntelligentIncludeException.cs</Link>
+    </Compile>
+    <Compile Include="..\Library\Library\ContentProcessor.cs">
+      <Link>Library\ContentProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\Library\Library\FilePathMaker.cs">
+      <Link>Library\FilePathMaker.cs</Link>
+    </Compile>
+    <Compile Include="..\Library\Library\FileProcessor.cs">
+      <Link>Library\FileProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\Library\Library\PathInformation.cs">
+      <Link>Library\PathInformation.cs</Link>
+    </Compile>
+    <Compile Include="..\Library\Library\PathInformationController.cs">
+      <Link>Library\PathInformationController.cs</Link>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="components.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

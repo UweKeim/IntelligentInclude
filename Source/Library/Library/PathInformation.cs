@@ -1,6 +1,6 @@
-﻿namespace IntelligentInclude
+﻿namespace IntelligentInclude.Library
 {
-	public class PathInformation
+    internal sealed class PathInformation
 	{
 		public string Folder { get; set; }
 		public string Filename { get; set; }
