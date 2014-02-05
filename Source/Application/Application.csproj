@@ -38,6 +38,9 @@
     <Compile Include="..\Library\IntelligentIncludeException.cs">
       <Link>IntelligentIncludeException.cs</Link>
     </Compile>
+    <Compile Include="..\Library\IntelligentIncludeParameter.cs">
+      <Link>IntelligentIncludeParameter.cs</Link>
+    </Compile>
     <Compile Include="..\Library\Library\ContentProcessor.cs">
       <Link>Library\ContentProcessor.cs</Link>
     </Compile>

@@ -18,10 +18,12 @@
                     Console.WriteLine("Working directory is '{0}'.", Environment.CurrentDirectory);
 
                     var rawPath = args[0].Trim('"', '\'', ' ', '\t');
-                    var pathInformation = PathInformationController.CreatePathInformation(rawPath, Console.WriteLine);
+                    var pathInformation = PathInformationController.CreatePathInformation(rawPath,
+                        new IntelligentIncludeParameter {Log = Console.WriteLine});
                     if (pathInformation != null)
                     {
-                        PathInformationController.Process(pathInformation, args.Length > 1 && isRecursive(args[1]), Console.WriteLine);
+                        PathInformationController.Process(pathInformation, args.Length > 1 && isRecursive(args[1]),
+                            new IntelligentIncludeParameter {Log = Console.WriteLine});
                         return 0;
                     }
                     else

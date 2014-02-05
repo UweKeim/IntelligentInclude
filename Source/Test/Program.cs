@@ -1,9 +1,10 @@
 ﻿namespace Test
 {
+    using System;
     using System.IO;
     using System.Reflection;
     using System.Text;
-    using global::IntelligentInclude;
+    using IntelligentInclude;
     using Properties;
 
     internal class Program
@@ -20,7 +21,18 @@
             File.WriteAllText(filePathIncluded01, Resources.included01, Encoding.UTF8);
             File.WriteAllText(filePathIncluded02, Resources.included02, Encoding.UTF8);
 
-            IntelligentInclude.Process(Path.Combine(folder, @"source*.txt"), true);
+            var param = new IntelligentIncludeParameter
+            {
+                Log = Console.WriteLine,
+                ResolvePlaceholder =
+                    delegate(string placeholder)
+                    {
+                        return @".\a\..\";
+                        //return string.Empty;
+                    }
+            };
+
+            IntelligentInclude.Process(Path.Combine(folder, @"source*.txt"), true, param);
         }
     }
 }

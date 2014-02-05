@@ -6,16 +6,50 @@
     [Serializable]
     public class IntelligentIncludeException : Exception
     {
-        public IntelligentIncludeException()
+        public ExceptionReason Reason { get; private set; }
+
+        public enum ExceptionReason
         {
+            None,
+            CannotCalculatePath,
+            RecursionTooDeep,
+            NoEndingPlaceholderFound,
+            CalculatedFilePathDoesNotExist,
+            EmptyPathSpecified,
+            SpecifiedDirectoryDoesNotExist,
+            FolderCannotBeDetermined,
+            NonExistingFolderPathDetected,
+            GenericErrorProcessingFile
         }
 
-        public IntelligentIncludeException(string message) : base(message)
+        //public IntelligentIncludeException()
+        //{
+        //    Reason = ExceptionReason.None;
+        //}
+
+        //public IntelligentIncludeException(string message) : base(message)
+        //{
+        //    Reason = ExceptionReason.None;
+        //}
+
+        //public IntelligentIncludeException(string message, Exception inner) : base(message, inner)
+        //{
+        //    Reason = ExceptionReason.None;
+        //}
+
+        public IntelligentIncludeException(ExceptionReason reason)
         {
+            Reason = reason;
         }
 
-        public IntelligentIncludeException(string message, Exception inner) : base(message, inner)
+        public IntelligentIncludeException(ExceptionReason reason,string message) : base(message)
         {
+            Reason = reason;
+        }
+
+        public IntelligentIncludeException(ExceptionReason reason,string message, Exception inner) : base(message, inner)
+        {
+            Reason = reason;
         }
 
         protected IntelligentIncludeException(

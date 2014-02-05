@@ -2,28 +2,35 @@
 {
     using Library;
 
-    public delegate void LogDelegate(string info);
-
     public static class IntelligentInclude
     {
-        public static void Process(string rawPath, bool isRecursive, LogDelegate log = null)
+        public static void Process(string rawPath, bool isRecursive, IntelligentIncludeParameter parameter = null)
         {
-            var pathInformation = PathInformationController.CreatePathInformation(rawPath, log);
+            rawPath = FilePathMaker.ExpandPlaceholder(parameter, rawPath);
+            var pathInformation = PathInformationController.CreatePathInformation(rawPath, parameter);
             if (pathInformation == null)
             {
-                throw new IntelligentIncludeException("No path information could be calculated from raw path.");
+                throw new IntelligentIncludeException(IntelligentIncludeException.ExceptionReason.CannotCalculatePath,
+                    "No path information could be calculated from raw path.");
             }
             else
             {
-                PathInformationController.Process(pathInformation, isRecursive, log);
+                PathInformationController.Process(pathInformation, isRecursive, parameter);
             }
         }
 
-        internal static void DoLog(LogDelegate log, string text)
+        internal static string DoResolvePlaceholder(IntelligentIncludeParameter parameter, string placeholder)
         {
-            if (log != null)
+            return parameter != null && parameter.ResolvePlaceholder != null
+                ? parameter.ResolvePlaceholder(placeholder)
+                : null;
+        }
+
+        internal static void DoLog(IntelligentIncludeParameter parameter, string text)
+        {
+            if (parameter != null && parameter.Log != null)
             {
-                log(text);
+                parameter.Log(text);
             }
         }
     }

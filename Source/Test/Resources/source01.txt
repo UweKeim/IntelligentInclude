@@ -12,6 +12,9 @@
 <p>
 	<!-- #zetainclude "..\bin-test\included02.txt" -->
 	<!-- #endzetainclude -->
+
+	<!-- #zetainclude "${Something}..\bin-test\included02.txt" -->
+	<!-- #endzetainclude -->
 </p>
 
 </body>

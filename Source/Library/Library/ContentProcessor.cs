@@ -6,107 +6,111 @@
     using System.Text.RegularExpressions;
 
     internal sealed class ContentProcessor
-	{
-		private readonly string _content;
-		private readonly string _folderPath;
+    {
+        private readonly string _content;
+        private readonly string _folderPath;
 
-		private static readonly Regex RXStart = new Regex(@"^.*?#zetainclude\s+""([^""]*)"".*?$",
-														   RegexOptions.IgnoreCase | RegexOptions.Multiline);
-		private static readonly Regex RXEnd = new Regex(@"^.*?#endzetainclude.*?$",
-														   RegexOptions.IgnoreCase | RegexOptions.Multiline);
+        private static readonly Regex RXStart = new Regex(@"^.*?#zetainclude\s+""([^""]*)"".*?$",
+            RegexOptions.IgnoreCase | RegexOptions.Multiline);
 
-		public ContentProcessor(
-			string content,
-			string folderPath)
-		{
-			_content = content;
-			_folderPath = folderPath;
-		}
+        private static readonly Regex RXEnd = new Regex(@"^.*?#endzetainclude.*?$",
+            RegexOptions.IgnoreCase | RegexOptions.Multiline);
 
-		public string Process(LogDelegate log, int recursionDepth = 0)
-		{
-			if (recursionDepth > 30)
-			{
-				throw new IntelligentIncludeException(makeIndent(recursionDepth) + "[ERROR] Too much recursion.");
-			}
-			else
-			{
-				var sb = new StringBuilder();
+        public ContentProcessor(
+            string content,
+            string folderPath)
+        {
+            _content = content;
+            _folderPath = folderPath;
+        }
 
-				var sourceIndex = 0;
+        public string Process(IntelligentIncludeParameter parameter, int recursionDepth = 0)
+        {
+            if (recursionDepth > 30)
+            {
+                throw new IntelligentIncludeException(IntelligentIncludeException.ExceptionReason.RecursionTooDeep,
+                    makeIndent(recursionDepth) + "[ERROR] Too much recursion.");
+            }
+            else
+            {
+                var sb = new StringBuilder();
 
-				var matches = RXStart.Matches(_content);
-				foreach (Match startMatch in matches)
-				{
-					// Find end tag.
-					var endMatch = RXEnd.Match(_content, startMatch.Index + startMatch.Length);
+                var sourceIndex = 0;
 
-				    if (endMatch.Success)
-				    {
-				        // Copy before.
-				        var before = _content.Substring(sourceIndex, startMatch.Index + startMatch.Length - sourceIndex);
-				        sb.Append(trimEndPlusNewLine(before));
+                var matches = RXStart.Matches(_content);
+                foreach (Match startMatch in matches)
+                {
+                    // Find end tag.
+                    var endMatch = RXEnd.Match(_content, startMatch.Index + startMatch.Length);
 
-				        // Insert inside.
-				        var included = makeIncluded(startMatch.Groups[1].Value, recursionDepth, log);
-				        sb.Append(trimEndPlusNewLine(included));
+                    if (endMatch.Success)
+                    {
+                        // Copy before.
+                        var before = _content.Substring(sourceIndex, startMatch.Index + startMatch.Length - sourceIndex);
+                        sb.Append(trimEndPlusNewLine(before));
 
-				        // Copy after, letting the next turn do it automatically.
-				        sourceIndex = endMatch.Index;
-				    }
-				    else
-				    {
-				        throw new IntelligentIncludeException(
-				            string.Format(
-				                makeIndent(recursionDepth) +
-				                "[ERROR] No ending placeholder for '{0}' found.",
-				                startMatch.Value));
-				    }
-				}
+                        // Insert inside.
+                        var included = makeIncluded(startMatch.Groups[1].Value, recursionDepth, parameter);
+                        sb.Append(trimEndPlusNewLine(included));
 
-				// Append remaining.
-				sb.Append(_content.Substring(sourceIndex));
+                        // Copy after, letting the next turn do it automatically.
+                        sourceIndex = endMatch.Index;
+                    }
+                    else
+                    {
+                        throw new IntelligentIncludeException(
+                            IntelligentIncludeException.ExceptionReason.NoEndingPlaceholderFound,
+                            string.Format(
+                                makeIndent(recursionDepth) +
+                                "[ERROR] No ending placeholder for '{0}' found.",
+                                startMatch.Value));
+                    }
+                }
 
-				return sb.ToString();
-			}
-		}
+                // Append remaining.
+                sb.Append(_content.Substring(sourceIndex));
 
-		private static string makeIndent(int recursionDepth)
-		{
-			return new string('\t', recursionDepth + 1);
-		}
+                return sb.ToString();
+            }
+        }
 
-		private static string trimEndPlusNewLine(string text)
-		{
-			if (string.IsNullOrEmpty(text))
-			{
-				return Environment.NewLine;
-			}
-			else
-			{
-				return text.TrimEnd('\r', '\n') + Environment.NewLine;
-			}
-		}
+        private static string makeIndent(int recursionDepth)
+        {
+            return new string('\t', recursionDepth + 1);
+        }
 
-		private string makeIncluded(string filePath, int recursionDepth, LogDelegate log)
-		{
-			var fullFilePath = new FilePathMaker().Make(filePath, _folderPath);
-			if (!string.IsNullOrEmpty(fullFilePath) && File.Exists(fullFilePath))
-			{
-				//var content = File.ReadAllText(fullFilePath, Encoding.UTF8);
-				var content = new FileProcessor(fullFilePath, log).Process(log, false, recursionDepth + 1);
-				return content;
-			}
-			else
-			{
-			    throw new IntelligentIncludeException(
-			        string.Format(
-			            makeIndent(recursionDepth) +
-			            "[ERROR] Calculated file path '{0}' (from '{1}' and '{2}') does not exist.",
-			            fullFilePath,
-			            filePath,
-			            _folderPath));
-			}
-		}
-	}
+        private static string trimEndPlusNewLine(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+            {
+                return Environment.NewLine;
+            }
+            else
+            {
+                return text.TrimEnd('\r', '\n') + Environment.NewLine;
+            }
+        }
+
+        private string makeIncluded(string filePath, int recursionDepth, IntelligentIncludeParameter parameter)
+        {
+            var fullFilePath = FilePathMaker.Make(parameter, filePath, _folderPath);
+            if (!string.IsNullOrEmpty(fullFilePath) && File.Exists(fullFilePath))
+            {
+                //var content = File.ReadAllText(fullFilePath, Encoding.UTF8);
+                var content = new FileProcessor(fullFilePath, parameter).Process(parameter, false, recursionDepth + 1);
+                return content;
+            }
+            else
+            {
+                throw new IntelligentIncludeException(
+                    IntelligentIncludeException.ExceptionReason.CalculatedFilePathDoesNotExist,
+                    string.Format(
+                        makeIndent(recursionDepth) +
+                        "[ERROR] Calculated file path '{0}' (from '{1}' and '{2}') does not exist.",
+                        fullFilePath,
+                        filePath,
+                        _folderPath));
+            }
+        }
+    }
 }

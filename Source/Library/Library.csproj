@@ -29,6 +29,7 @@
   <ItemGroup>
     <Compile Include="IntelligentInclude.cs" />
     <Compile Include="IntelligentIncludeException.cs" />
+    <Compile Include="IntelligentIncludeParameter.cs" />
     <Compile Include="Library\ContentProcessor.cs" />
     <Compile Include="Library\FilePathMaker.cs" />
     <Compile Include="Library\FileProcessor.cs" />
